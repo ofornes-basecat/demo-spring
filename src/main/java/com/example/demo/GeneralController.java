@@ -22,5 +22,11 @@ public class GeneralController {
     public String modal2(@RequestParam("name") String name, Model model) {
         model.addAttribute("name", name);
         return "modal2";
-    }    
+    }
+
+    @GetMapping("/modals/no-implementat")
+    public String modalNoImplementat(@RequestParam("element") String name, Model model) {
+        model.addAttribute("element", name);
+        return "no_implementat";
+    }
 }
