@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -21,6 +19,8 @@
 		<webjars-locator.version>0.45</webjars-locator.version>
 
 		<lombok-plugin.version>1.18.20.0</lombok-plugin.version>
+
+		<jib-maven-plugin.version>3.2.1</jib-maven-plugin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -89,6 +89,42 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>${jib-maven-plugin.version}</version>
+				<configuration>
+					<to>
+						<image>registry.hub.docker.com/ofornesbase/${project.name}</image>
+						<tags>
+							<tag>${project.version}</tag>
+							<tag>latest</tag>
+						</tags>
+					</to>
+				</configuration>
+				<executions>
+					<execution>
+						<id>build</id>
+						<phase>install</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>io.kokuwa.maven</groupId>
+				<artifactId>helm-maven-plugin</artifactId>
+				<version>6.0.0</version>
+				<configuration>
+					<chartDirectory>src/main/scripts/helm</chartDirectory>
+					<appVersion>${project.version}</appVersion>
+					<chartVersion>${project.version}</chartVersion>
+					<helmVersion>3.8.1</helmVersion>
+					<useLocalHelmBinary>true</useLocalHelmBinary>
+					<helmExecutableDirectory>/snap/bin</helmExecutableDirectory>
 				</configuration>
 			</plugin>
 		</plugins>

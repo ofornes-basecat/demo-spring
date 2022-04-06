@@ -1,0 +1,87 @@
+---
+# Test
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: demo-spring
+  name: demo-spring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-spring
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: demo-spring
+    spec:
+      containers:
+      - image: ofornesbase/demo:latest
+        imagePullPolicy: Always
+        name: demo-spring
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: demo-spring
+  name: demo-spring
+spec:
+  ports:
+  - name: map
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: demo-spring
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demo-spring
+spec:
+  ingressClassName: kong
+  rules:
+  - host: demo.test
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: demo-spring
+            port:
+              number: 80
+  defaultBackend:
+    service:
+      name: demo-spring
+      port:
+        number: 80
+#spec:
+#  rules:
+#  - host: demo.test
+#    http:
+#      paths:
+#      - path: /demo-spring
+#        pathType: Prefix
+#        backend:
+#          service:
+#            name: demo-spring
+#            port:
+#              number: 80
+#  defaultBackend:
+#    service:
+#      name: demo-spring
+#      port:
+#        number: 80
+

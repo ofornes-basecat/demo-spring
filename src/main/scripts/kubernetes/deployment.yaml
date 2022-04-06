@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: demo-spring
+  name: demo-spring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-spring
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: demo-spring
+    spec:
+      containers:
+      - image: ofornesbase/demo:latest
+        imagePullPolicy: Always
+        name: demo-spring
+        ports:
+          - name: http
+            containerPort: 8080
+            protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: http
+        resources: {}
+status: {}
